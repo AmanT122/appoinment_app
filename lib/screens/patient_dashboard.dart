@@ -1,4 +1,6 @@
 import 'package:appoinment_app/screens/doctor_details.dart';
+import 'package:appoinment_app/screens/notifications.dart';
+import 'package:appoinment_app/screens/settings.dart';
 import 'package:flutter/material.dart';
 
 class PatientDashboard extends StatelessWidget {
@@ -37,11 +39,15 @@ class HealthDashboard extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications_none),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
+            },
           ),
           IconButton(
             icon: Icon(Icons.settings_outlined),
-            onPressed: () {},
+            onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+            },
           ),
         ],
         backgroundColor: Colors.white,

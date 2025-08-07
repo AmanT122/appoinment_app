@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'package:appoinment_app/screens/doctor_details.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-
 import 'screens/login_screen.dart';
-import 'screens/signup_screen.dart';
 import 'screens/patient_dashboard.dart';
 import 'screens/doctor_dashboard.dart';
 
@@ -39,7 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
           children: const [
             Icon(Icons.local_hospital, size: 100, color: Colors.blue),
             SizedBox(height: 20),
-            Text('Medical Booking', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            Text(
+              'Medical Booking',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 10),
             CircularProgressIndicator(),
           ],
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         // '/signup': (ctx) => const SignupScreen(),
         '/patient': (ctx) => PatientDashboard(),
         '/doctor': (ctx) => const DoctorDashboard(),
-        '/details': (ctx) =>  DoctorDetails(),
+        '/details': (ctx) => DoctorDetails(),
       },
     );
   }
