@@ -1,246 +1,384 @@
 import 'package:flutter/material.dart';
-class PatientDashboard extends StatelessWidget {
-  const PatientDashboard({super.key});
 
+class PatientDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pateint Dashboard',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Roboto',
       ),
-      home: const HealthDashboard(),
+      home: HealthDashboard(),
     );
   }
 }
 
 class HealthDashboard extends StatelessWidget {
-  const HealthDashboard({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Health Dashboard'),
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            backgroundImage: AssetImage('assets/patient_avatar.png'),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Asmit Vishwakarma', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Patient ID: PX458792', style: TextStyle(fontSize: 12)),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_none),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.settings_outlined),
+            onPressed: () {},
+          ),
+        ],
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Section
-            const Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('htps://via.placeholder.com/150'),
-                ),
-                SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            // Location Card
+            Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
                   children: [
-                    Text(
-                      'Aman Tiwari',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Icon(Icons.location_on, size: 20, color: Colors.blue[700]),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text('8RWV+7XH, near Bassein Catholic Bank, Virar West',
+                          style: TextStyle(fontSize: 14)),
                     ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on, size: 16),
-                        SizedBox(width: 4),
-                        Text('8RWV+7XH, near Bassein...'),
-                      ],
-                    ),
+                    Icon(Icons.chevron_right, color: Colors.grey),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Check Pain Section
-            const Text(
-              'Check Pain',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            
+            SizedBox(height: 24),
+            
+            // Symptoms Section
+            Text('Your Symptoms', style: Theme.of(context).textTheme.headlineSmall),
+            SizedBox(height: 12),
             Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: [
-                Chip(
-                  label: const Text('Headache'),
-                  backgroundColor: Colors.blue[100],
-                ),
-                const Chip(
-                  label: Text('Knee pa'),
-                ),
+                _SymptomChip(label: 'Chest Pain', icon: Icons.favorite_border, active: true),
+                _SymptomChip(label: 'Headache', icon: Icons.psychology_outlined),
+                _SymptomChip(label: 'Knee Pain', icon: Icons.directions_run_outlined),
+                _SymptomChip(label: 'Add +', icon: Icons.add),
               ],
             ),
-            const Divider(height: 40),
-
-            // Upcoming Appointment Section
+            
+            SizedBox(height: 24),
+            
+            // Upcoming Appointment
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Upcoming Appointment',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Upcoming Appointment', style: Theme.of(context).textTheme.headlineSmall),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('See All'),
+                  child: Text('View All', style: TextStyle(color: Colors.blue[700])),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.blue[50]!, Colors.blue[100]!],
+                ),
+                borderRadius: BorderRadius.circular(16.0),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  const Text(
-                    'Dr. Abhineet Pardesi',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/doctor1.jpg'),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Dr. Abhineet Pardesi', 
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('Orthopaedic Specialist', 
+                            style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.calendar_today, size: 16, color: Colors.blue[700]),
+                            SizedBox(width: 4),
+                            Text('Monday, 22 July', style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 16),
+                            Icon(Icons.access_time, size: 16, color: Colors.blue[700]),
+                            SizedBox(width: 4),
+                            Text('10:00 AM', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Orthopaedic',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  Icon(Icons.chevron_right, color: Colors.grey),
+                ],
+              ),
+            ),
+            
+            SizedBox(height: 24),
+            
+            // Specialists Section
+            Text('Specialists', style: Theme.of(context).textTheme.headlineSmall),
+            SizedBox(height: 12),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _SpecialistCard(
+                    icon: Icons.healing, 
+                    title: 'Orthopaedic',
+                    color: Colors.orange[100]!,
+                    iconColor: Colors.orange[800]!,
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 16),
-                      const SizedBox(width: 8),
-                      const Text('Monday, 22 July'),
-                      const SizedBox(width: 16),
-                      const Icon(Icons.access_time, size: 16),
-                      const SizedBox(width: 8),
-                      const Text('10:00 AM'),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: () {},
-                      ),
-                    ],
+                  _SpecialistCard(
+                    icon: Icons.favorite, 
+                    title: 'Cardiologist',
+                    color: Colors.red[100]!,
+                    iconColor: Colors.red[800]!,
+                  ),
+                  _SpecialistCard(
+                    icon: Icons.child_care, 
+                    title: 'Pediatrician',
+                    color: Colors.blue[100]!,
+                    iconColor: Colors.blue[800]!,
+                  ),
+                  _SpecialistCard(
+                    icon: Icons.psychology, 
+                    title: 'Psychiatrist',
+                    color: Colors.purple[100]!,
+                    iconColor: Colors.purple[800]!,
                   ),
                 ],
               ),
             ),
-            const Divider(height: 40),
-
-            // Specialists Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Specialists',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('See All'),
-                ),
-              ],
-            ),
-            const Divider(height: 40),
-
+            
+            SizedBox(height: 24),
+            
             // Doctors Nearby Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Doctors near by',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Doctors Near You', style: Theme.of(context).textTheme.headlineSmall),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('See All'),
+                  child: Text('View All', style: TextStyle(color: Colors.blue[700])),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            const Row(
+            SizedBox(height: 12),
+            GridView.count(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              childAspectRatio: 1.2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
               children: [
-                Text('1.5km'),
-                SizedBox(width: 16),
-                Text('2.2km'),
-                SizedBox(width: 16),
-                Text('3.4km'),
+                _DoctorCard(
+                  doctorName: 'Dr. Avani', 
+                  specialization: 'Orthopaedic', 
+                  distance: '2.2 km',
+                  image: 'assets/doctor2.jpg',
+                ),
+                _DoctorCard(
+                  doctorName: 'Dr. Murarskar', 
+                  specialization: 'Naturopathy', 
+                  distance: '1.5 km',
+                  image: 'assets/doctor3.jpg',
+                ),
+                _DoctorCard(
+                  doctorName: 'Dr. Kamal', 
+                  specialization: 'Dentist', 
+                  distance: '3.1 km',
+                  image: 'assets/doctor4.jpg',
+                ),
+                _DoctorCard(
+                  doctorName: 'Dr. Sharma', 
+                  specialization: 'General Physician', 
+                  distance: '0.8 km',
+                  image: 'assets/doctor5.jpg',
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-            _buildDoctorCard('Dr. Muraskar', 'Pedestrian'),
-            const SizedBox(height: 12),
-            _buildDoctorCard('Dr. Avani', 'Orthopaedic'),
-            const SizedBox(height: 12),
-            _buildDoctorCard('Dr. Ke', 'Physician'),
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue[700],
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Messages'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        ],
+      ),
     );
   }
+}
 
-  Widget _buildDoctorCard(String name, String specialty) {
+class _SymptomChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool active;
+
+  _SymptomChip({required this.label, required this.icon, this.active = false});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
+        color: active ? Colors.blue[50] : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: active ? Colors.blue : Colors.grey[300]!,
+          width: 1,
+        ),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                specialty,
-                style: const TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward),
-            onPressed: () {},
-          ),
+          Icon(icon, size: 16, color: active ? Colors.blue : Colors.grey),
+          SizedBox(width: 4),
+          Text(label, style: TextStyle(
+            fontSize: 14,
+            color: active ? Colors.blue : Colors.black,
+          )),
         ],
+      ),
+    );
+  }
+}
+
+class _SpecialistCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+  final Color iconColor;
+
+  _SpecialistCard({
+    required this.icon,
+    required this.title,
+    required this.color,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 120,
+      margin: EdgeInsets.only(right: 12),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 24, color: iconColor),
+          ),
+          SizedBox(height: 8),
+          Text(title, 
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          SizedBox(height: 4),
+          Text('12 Doctors', 
+              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+        ],
+      ),
+    );
+  }
+}
+
+class _DoctorCard extends StatelessWidget {
+  final String doctorName;
+  final String specialization;
+  final String distance;
+  final String image;
+
+  _DoctorCard({
+    required this.doctorName,
+    required this.specialization,
+    required this.distance,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 36,
+              backgroundImage: AssetImage(image),
+            ),
+            SizedBox(height: 12),
+            Text(doctorName, 
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            SizedBox(height: 4),
+            Text(specialization, 
+                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.location_on, size: 14, color: Colors.grey),
+                SizedBox(width: 4),
+                Text(distance, 
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

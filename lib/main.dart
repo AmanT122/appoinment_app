@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         '/': (ctx) => const SplashScreen(),
         '/login': (ctx) => const LoginScreen(),
         // '/signup': (ctx) => const SignupScreen(),
-        '/patient': (ctx) => const PatientDashboard(),
+        '/patient': (ctx) => PatientDashboard(),
         '/doctor': (ctx) => const DoctorDashboard(),
       },
     );
