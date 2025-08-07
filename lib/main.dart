@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:appoinment_app/screens/doctor_details.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_core/firebase_core.dart';
 
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
         // '/signup': (ctx) => const SignupScreen(),
         '/patient': (ctx) => PatientDashboard(),
         '/doctor': (ctx) => const DoctorDashboard(),
+        '/details': (ctx) =>  DoctorDetails(),
       },
     );
   }

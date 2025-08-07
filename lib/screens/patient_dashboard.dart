@@ -1,3 +1,4 @@
+import 'package:appoinment_app/screens/doctor_details.dart';
 import 'package:flutter/material.dart';
 
 class PatientDashboard extends StatelessWidget {
@@ -29,7 +30,7 @@ class HealthDashboard extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Asmit Vishwakarma', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Aman Tiwari', style: TextStyle(fontWeight: FontWeight.bold)),
             Text('Patient ID: PX458792', style: TextStyle(fontSize: 12)),
           ],
         ),
@@ -98,7 +99,9 @@ class HealthDashboard extends StatelessWidget {
               children: [
                 Text('Upcoming Appointment', style: Theme.of(context).textTheme.headlineSmall),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navigator.pushNamed(context, '/appointments');
+                  },
                   child: Text('View All', style: TextStyle(color: Colors.blue[700])),
                 ),
               ],
@@ -194,7 +197,8 @@ class HealthDashboard extends StatelessWidget {
               children: [
                 Text('Doctors Near You', style: Theme.of(context).textTheme.headlineSmall),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+             },
                   child: Text('View All', style: TextStyle(color: Colors.blue[700])),
                 ),
               ],
@@ -208,30 +212,82 @@ class HealthDashboard extends StatelessWidget {
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
               children: [
-                _DoctorCard(
-                  doctorName: 'Dr. Avani', 
-                  specialization: 'Orthopaedic', 
-                  distance: '2.2 km',
-                  image: 'assets/doctor2.jpg',
-                ),
-                _DoctorCard(
-                  doctorName: 'Dr. Murarskar', 
-                  specialization: 'Naturopathy', 
-                  distance: '1.5 km',
-                  image: 'assets/doctor3.jpg',
-                ),
-                _DoctorCard(
-                  doctorName: 'Dr. Kamal', 
-                  specialization: 'Dentist', 
-                  distance: '3.1 km',
-                  image: 'assets/doctor4.jpg',
-                ),
-                _DoctorCard(
-                  doctorName: 'Dr. Sharma', 
-                  specialization: 'General Physician', 
-                  distance: '0.8 km',
-                  image: 'assets/doctor5.jpg',
-                ),
+              GestureDetector(
+      onTap: () {
+        // Navigate to the doctor details screen when tapped
+         Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DoctorDetails(
+        
+      ),
+    ),
+  );
+      },
+      child: _DoctorCard(
+        doctorName: 'Dr. Avani', 
+        specialization: 'Orthopaedic', 
+        distance: '2.2 km',
+        image: 'assets/doctor2.jpg',
+      ),
+    ),
+    GestureDetector(
+      onTap: () {
+        // Navigate to the doctor details screen when tapped
+         Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DoctorDetails(
+        
+      ),
+    ),
+  );
+      },
+      child: _DoctorCard(
+        doctorName: 'Dr. Murarskar', 
+        specialization: 'Naturopathy', 
+        distance: '1.5 km',
+        image: 'assets/doctor3.jpg',
+      ),
+    ),
+    GestureDetector(
+      onTap: () {
+        // Navigate to the doctor details screen when tapped
+         Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DoctorDetails(
+        
+      ),
+    ),
+  );
+      },
+      child: _DoctorCard(
+        doctorName: 'Dr. Kamal', 
+        specialization: 'Dentist', 
+        distance: '3.1 km',
+        image: 'assets/doctor4.jpg',
+      ),
+    ),
+    GestureDetector(
+      onTap: () {
+        // Navigate to the doctor details screen when tapped
+          Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DoctorDetails(
+        
+      ),
+    ),
+  );
+      },
+      child: _DoctorCard(
+        doctorName: 'Dr. Sharma', 
+        specialization: 'General Physician', 
+        distance: '0.8 km',
+        image: 'assets/doctor5.jpg',
+      ),
+    ),
               ],
             ),
           ],
