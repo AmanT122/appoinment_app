@@ -2,6 +2,8 @@
 // import 'package:appoinment_sys/screens/patient_dashboard.dart';
 import 'package:appoinment_app/screens/doctor_dashboard.dart';
 import 'package:appoinment_app/screens/patient_dashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccount extends StatelessWidget {
@@ -31,6 +33,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // Add this function for sign up
+  Future<void> _signUp() async {
+    if (selectedRole == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a role')),
+      );
+      return;
+    }
+    try {
+      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // You can also save additional user info (name, role) to Firestore here if needed
+
+      // Navigate to dashboard
+      if (selectedRole == 'doctor') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DoctorDashboard()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PatientDashboard()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? 'Sign up failed')),
+      );
+    }
+  }
+
+  Future<void> _signUpWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return; // User cancelled
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Navigate to dashboard (choose based on selectedRole or default)
+      if (selectedRole == 'doctor') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DoctorDashboard()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PatientDashboard()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google sign-in failed')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,33 +200,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (selectedRole == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please select a role')),
-                  );
-                  return;
-                }
-                
-                // Here you would typically validate the form and send data to server
-                // For now, we'll just navigate to the appropriate dashboard
-                
-                if (selectedRole == 'doctor') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  DoctorDashboard(),
-                    ),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>  PatientDashboard(),
-                    ),
-                  );
-                }
-              },
+              onPressed: _signUp, // <-- update here
               child: const Text('Sign Up'),
             ),
             const SizedBox(height: 20),
@@ -183,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.g_mobiledata, size: 40),
-                  onPressed: () {},
+                  onPressed: _signUpWithGoogle, // <-- update here
                 ),
                 const SizedBox(width: 20),
                 IconButton(

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "92553503405",
+    "project_id": "appointment-sys-67b29",
+    "storage_bucket": "appointment-sys-67b29.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92553503405:android:fceb7e0e10ec2d88629c24",
+        "android_client_info": {
+          "package_name": "com.example.appoinment_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92553503405-kjpn41lfh4q8kogo42jsf962urte7kfk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfyUU7HIz2dHPHJIuW7kUwHBLsRbilwyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92553503405-kjpn41lfh4q8kogo42jsf962urte7kfk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
