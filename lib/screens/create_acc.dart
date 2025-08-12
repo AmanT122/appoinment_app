@@ -44,8 +44,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content:
-                Text('Please select a role', style: TextStyle(fontWeight: FontWeight.bold))),
+          content: Text(
+            'Please select a role',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       );
       return;
     }
@@ -69,8 +72,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(e.message ?? 'Sign up failed',
-                style: const TextStyle(fontWeight: FontWeight.bold))),
+          content: Text(
+            e.message ?? 'Sign up failed',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       );
     }
   }
@@ -80,7 +86,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -102,26 +109,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Google sign-in failed',
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          content: Text(
+            'Google sign-in failed',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       );
     }
-  }
-
-  Future<void> _signUpWithApple() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Apple sign-in is not implemented yet.',
-              style: TextStyle(fontWeight: FontWeight.bold))),
-    );
-  }
-
-  Future<void> _signUpWithTwitter() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Twitter sign-in is not implemented yet.',
-              style: TextStyle(fontWeight: FontWeight.bold))),
-    );
   }
 
   @override
@@ -129,11 +123,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: SafeArea(
         child: DefaultTextStyle(
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back Arrow and Text with no left margin or padding
+              // Back Arrow and Title
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Row(
@@ -162,9 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(width: 8),
                     const Text(
                       'Create Account',
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
+                      style: TextStyle(fontSize: 22),
                     ),
                   ],
                 ),
@@ -183,9 +176,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       TextFormField(
                         controller: nameController,
                         decoration: const InputDecoration(
-                          hintText: 'Enter your name',                          
+                          hintText: 'Enter your name',
                         ),
-                        style: const TextStyle(fontWeight: FontWeight.normal),
+                        style:
+                            const TextStyle(fontWeight: FontWeight.normal),
                       ),
                       const SizedBox(height: 20),
                       const Text('Email'),
@@ -193,9 +187,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       TextFormField(
                         controller: emailController,
                         decoration: const InputDecoration(
-                          hintText: 'Enter your email',                          
+                          hintText: 'Enter your email',
                         ),
-                        style: const TextStyle(fontWeight: FontWeight.normal),
+                        style:
+                            const TextStyle(fontWeight: FontWeight.normal),
                       ),
                       const SizedBox(height: 20),
                       const Text('Password'),
@@ -206,7 +201,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Enter your password',
                         ),
-                        style: const TextStyle(fontWeight: FontWeight.normal),
+                        style:
+                            const TextStyle(fontWeight: FontWeight.normal),
                       ),
                       const SizedBox(height: 30),
                       const Text('Select your role'),
@@ -222,8 +218,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               },
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(
-                                  color:
-                                      selectedRole == 'doctor' ? Colors.blue : Colors.grey,
+                                  color: selectedRole == 'doctor'
+                                      ? Colors.blue
+                                      : Colors.grey,
                                   width: selectedRole == 'doctor' ? 2 : 1,
                                 ),
                               ),
@@ -231,8 +228,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 'Doctor',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      selectedRole == 'doctor' ? Colors.blue : Colors.grey,
+                                  color: selectedRole == 'doctor'
+                                      ? Colors.blue
+                                      : Colors.grey,
                                 ),
                               ),
                             ),
@@ -247,8 +245,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               },
                               style: OutlinedButton.styleFrom(
                                 side: BorderSide(
-                                  color:
-                                      selectedRole == 'patient' ? Colors.blue : Colors.grey,
+                                  color: selectedRole == 'patient'
+                                      ? Colors.blue
+                                      : Colors.grey,
                                   width: selectedRole == 'patient' ? 2 : 1,
                                 ),
                               ),
@@ -256,8 +255,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 'Patient',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color:
-                                      selectedRole == 'patient' ? Colors.blue : Colors.grey,
+                                  color: selectedRole == 'patient'
+                                      ? Colors.blue
+                                      : Colors.grey,
                                 ),
                               ),
                             ),
@@ -288,25 +288,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Text('Continue with'),
                       ),
                       const SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
+
+                      // Updated Google Sign-In Button (Horizontal Layout)
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: _signUpWithGoogle,
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            side: const BorderSide(color: Colors.grey),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(
-                                icon: Image.asset('assets/google.webp',
-                                    height: 40, width: 40),
-                                onPressed: _signUpWithGoogle,
+                              Image.asset(
+                                'assets/google.webp',
+                                height: 24,
+                                width: 24,
                               ),
-                              const SizedBox(height: 4),
-                              const Text('Google'),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Continue with Google',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                ),
+                              ),
                             ],
                           ),
-                          
-                        ],
+                        ),
                       ),
-                      const SizedBox(height: 30),
 
+                      const SizedBox(height: 30),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: TextButton(

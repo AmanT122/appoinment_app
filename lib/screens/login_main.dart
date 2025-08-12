@@ -32,29 +32,35 @@ class _LoginMainState extends State<LoginMain> {
   }
 
   Widget _buildSocialLoginButton(String imagePath, String label, VoidCallback onPressed) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            imagePath,
-            width: 36,
-            height: 36,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Colors.black87,
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath,
+              width: 24,
+              height: 24,
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -66,15 +72,13 @@ class _LoginMainState extends State<LoginMain> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 64), // Increased top margin
-
-            // Back arrow + Log in title
+            const SizedBox(height: 64),
             Row(
               children: [
                 IconButton(
                   icon: const Icon(
                     Icons.arrow_back_ios_new,
-                    size: 28, // Bigger and more bold-style icon
+                    size: 28,
                     color: Colors.black,
                   ),
                   onPressed: () {
@@ -91,10 +95,7 @@ class _LoginMainState extends State<LoginMain> {
                 ),
               ],
             ),
-
             const SizedBox(height: 32),
-
-            // Padded content
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -176,15 +177,9 @@ class _LoginMainState extends State<LoginMain> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildSocialLoginButton('assets/google.webp', 'Google', () {
-                            // TODO: Add Google login logic
-                          }),
-                          
-                        ],
-                      ),
+                      _buildSocialLoginButton('assets/google.webp', 'Continue with Google', () {
+                        // TODO: Add Google login logic
+                      }),
                       const Spacer(),
                       Center(
                         child: TextButton(

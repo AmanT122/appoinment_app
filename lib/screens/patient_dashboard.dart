@@ -265,7 +265,7 @@ class HealthDashboard extends StatelessWidget {
         doctorName: 'Dr. Avani', 
         specialization: 'Orthopaedic', 
         distance: '2.2 km',
-        image: 'assets/doctor2.jpg',
+        image: 'assets/dr.1.jpg',
       ),
     ),
     GestureDetector(
@@ -284,7 +284,7 @@ class HealthDashboard extends StatelessWidget {
         doctorName: 'Dr. Murarskar', 
         specialization: 'Naturopathy', 
         distance: '1.5 km',
-        image: 'assets/doctor3.jpg',
+        image: 'assets/dr.2.webp',
       ),
     ),
     GestureDetector(
@@ -303,7 +303,7 @@ class HealthDashboard extends StatelessWidget {
         doctorName: 'Dr. Kamal', 
         specialization: 'Dentist', 
         distance: '3.1 km',
-        image: 'assets/doctor4.jpg',
+        image: 'assets/dr.3.jpeg',
       ),
     ),
     GestureDetector(
@@ -322,7 +322,7 @@ class HealthDashboard extends StatelessWidget {
         doctorName: 'Dr. Sharma', 
         specialization: 'General Physician', 
         distance: '0.8 km',
-        image: 'assets/doctor5.jpg',
+        image: 'assets/dr.4.webp',
       ),
     ),
               ],
@@ -355,27 +355,12 @@ class _SymptomChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: active ? Colors.blue[50] : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: active ? Colors.blue : Colors.grey[300]!,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: active ? Colors.blue : Colors.grey),
-          SizedBox(width: 4),
-          Text(label, style: TextStyle(
-            fontSize: 14,
-            color: active ? Colors.blue : Colors.black,
-          )),
-        ],
-      ),
+    return Chip(
+      avatar: Icon(icon, size: 20, color: active ? Colors.white : Colors.grey[600]),
+      label: Text(label, style: TextStyle(color: active ? Colors.white : Colors.black)),
+      backgroundColor: active ? Colors.blue[700] : Colors.grey[300],
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     );
   }
 }
@@ -397,29 +382,20 @@ class _SpecialistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 120,
-      margin: EdgeInsets.only(right: 12),
-      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.only(right: 16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 24, color: iconColor),
-          ),
+          Icon(icon, size: 36, color: iconColor),
           SizedBox(height: 8),
-          Text(title, 
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          SizedBox(height: 4),
-          Text('12 Doctors', 
-              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, color: iconColor),
+          ),
         ],
       ),
     );
@@ -441,34 +417,108 @@ class _DoctorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.15),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            child: Image.asset(
+              image,
+              height: 120,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(
+                  doctorName,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  specialization,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                ),
+                SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.location_on, size: 14, color: Colors.blue[700]),
+                    SizedBox(width: 4),
+                    Text(distance, style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DoctorSearchDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Container(
+        padding: EdgeInsets.all(16),
+        width: 320,
+        height: 240,
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 36,
-              backgroundImage: AssetImage(image),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Search Doctor',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
             ),
             SizedBox(height: 12),
-            Text(doctorName, 
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-            SizedBox(height: 4),
-            Text(specialization, 
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-            SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.location_on, size: 14, color: Colors.grey),
-                SizedBox(width: 4),
-                Text(distance, 
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
+            Expanded(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('Dr. Avani'),
+                    subtitle: Text('Orthopaedic'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DoctorDetails()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('Dr. Murarskar'),
+                    subtitle: Text('Naturopathy'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DoctorDetails()),
+                      );
+                    },
+                  ),
+                  // Add more doctors here
+                ],
+              ),
             ),
           ],
         ),
@@ -477,104 +527,38 @@ class _DoctorCard extends StatelessWidget {
   }
 }
 
-// Add this widget at the end of the file
-class _DoctorSearchDialog extends StatefulWidget {
-  @override
-  State<_DoctorSearchDialog> createState() => _DoctorSearchDialogState();
-}
-
-class _DoctorSearchDialogState extends State<_DoctorSearchDialog> {
-  final TextEditingController _searchController = TextEditingController();
-  final List<String> _doctors = [
-    'Dr. Anurag Tripathi',
-    'Dr. Anuj Tripathi',
-    'Dr. Radhika Tripathi',
-    'Dr. Muskan Tripathi',
-    'Dr. Payal Tripathi',
-  ];
-  String _query = '';
-
-  @override
-  Widget build(BuildContext context) {
-    final filteredDoctors = _doctors
-        .where((d) => d.toLowerCase().contains(_query.toLowerCase()))
-        .toList();
-
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      backgroundColor: Colors.grey[300],
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          width: 320,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    'Search',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Dr. Tripathi',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onChanged: (val) {
-                  setState(() {
-                    _query = val;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              ...filteredDoctors.map((doctor) => Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [Colors.green, Colors.blue],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        doctor,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                ],
-              )),
-            ],
+class _ProfilePopup extends StatelessWidget {
+  void _showLogoutConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Logout'),
+        content: Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close confirmation dialog
+            },
+            child: Text('Cancel'),
           ),
-        ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close confirmation dialog
+              Navigator.of(context).pop(); // Close profile popup
+
+              // TODO: Add your actual logout logic here
+              // For example, navigate to login screen or clear user session
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Logged out successfully')),
+              );
+            },
+            child: Text('OK'),
+          ),
+        ],
       ),
     );
   }
-}
 
-// Profile Popup Dialog
-class _ProfilePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -611,7 +595,7 @@ class _ProfilePopup extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image
+                      backgroundImage: AssetImage('assets/profile.jpg'),
                     ),
                     SizedBox(width: 12),
                     Column(
@@ -658,7 +642,7 @@ class _ProfilePopup extends StatelessWidget {
               SizedBox(height: 24),
               TextButton(
                 onPressed: () {
-                  // Add logout logic here
+                  _showLogoutConfirmation(context);
                 },
                 child: Text(
                   'LOG OUT',

@@ -62,5 +62,10 @@ flutter:
   assets:
     - assets/logo.png
     - assets/google.webp
+    - assets/dr.1.jpg
+    - assets/dr.2.webp
+    - assets/dr.3.jpeg
+    - assets/dr.4.webp
+
     
 
