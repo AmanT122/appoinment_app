@@ -23,36 +23,40 @@ class HealthDashboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundImage: AssetImage('assets/patient_avatar.png'),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Row(
           children: [
-            Text('Aman Tiwari', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('Patient ID: PX458792', style: TextStyle(fontSize: 12)),
+            // Logo
+            Image.asset(
+              'assets/logo.png', // Replace with your logo asset
+              height: 40,
+            ),
+            SizedBox(width: 15),
+            Text(
+              'Asmit Vishwakarma',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
+            ),
+            Spacer(),
+            // Profile Avatar
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => _ProfilePopup(),
+                );
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image
+              ),
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_none),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage()));
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings_outlined),
-            onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
-            },
-          ),
-        ],
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 1,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -84,18 +88,45 @@ class HealthDashboard extends StatelessWidget {
             SizedBox(height: 24),
             
             // Symptoms Section
-            Text('Your Symptoms', style: Theme.of(context).textTheme.headlineSmall),
-            SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                _SymptomChip(label: 'Chest Pain', icon: Icons.favorite_border, active: true),
-                _SymptomChip(label: 'Headache', icon: Icons.psychology_outlined),
-                _SymptomChip(label: 'Knee Pain', icon: Icons.directions_run_outlined),
-                _SymptomChip(label: 'Add +', icon: Icons.add),
-              ],
+            SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: Row(
+    children: [
+      // Search Icon Button
+      Container(
+        margin: EdgeInsets.only(right: 8),
+        child: IconButton(
+          icon: Icon(Icons.search, size: 28),
+          tooltip: 'Search Doctor',
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => _DoctorSearchDialog(),
+            );
+          },
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
+          ],
+        ),
+      ),
+      _SymptomChip(label: 'Chest Pain', icon: Icons.favorite_border, active: true),
+      SizedBox(width: 8),
+      _SymptomChip(label: 'Headache', icon: Icons.psychology_outlined),
+      SizedBox(width: 8),
+      _SymptomChip(label: 'Knee Pain', icon: Icons.directions_run_outlined),
+      SizedBox(width: 8),
+      _SymptomChip(label: 'Add +', icon: Icons.add),
+    ],
+  ),
+),
             
             SizedBox(height: 24),
             
@@ -440,6 +471,202 @@ class _DoctorCard extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Add this widget at the end of the file
+class _DoctorSearchDialog extends StatefulWidget {
+  @override
+  State<_DoctorSearchDialog> createState() => _DoctorSearchDialogState();
+}
+
+class _DoctorSearchDialogState extends State<_DoctorSearchDialog> {
+  final TextEditingController _searchController = TextEditingController();
+  final List<String> _doctors = [
+    'Dr. Anurag Tripathi',
+    'Dr. Anuj Tripathi',
+    'Dr. Radhika Tripathi',
+    'Dr. Muskan Tripathi',
+    'Dr. Payal Tripathi',
+  ];
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredDoctors = _doctors
+        .where((d) => d.toLowerCase().contains(_query.toLowerCase()))
+        .toList();
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: Colors.grey[300],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: 320,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    'Search',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Dr. Tripathi',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onChanged: (val) {
+                  setState(() {
+                    _query = val;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              ...filteredDoctors.map((doctor) => Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [Colors.green, Colors.blue],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        doctor,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                ],
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Profile Popup Dialog
+class _ProfilePopup extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: Colors.grey[300],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: 320,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    'Profile',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image
+                    ),
+                    SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ankita Tiwari',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                          'ankitatiwari6@gmail.com',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(height: 4),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            minimumSize: Size(60, 28),
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            shape: StadiumBorder(),
+                          ),
+                          onPressed: () {},
+                          icon: Icon(Icons.edit, size: 16, color: Colors.white),
+                          label: Text('Edit', style: TextStyle(fontSize: 12, color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: 24),
+              TextButton(
+                onPressed: () {
+                  // Add logout logic here
+                },
+                child: Text(
+                  'LOG OUT',
+                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

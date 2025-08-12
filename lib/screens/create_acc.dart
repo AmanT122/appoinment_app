@@ -1,5 +1,3 @@
-// import 'package:appoinment_sys/screens/doctor_dashboard.dart';
-// import 'package:appoinment_sys/screens/patient_dashboard.dart';
 import 'package:appoinment_app/screens/doctor_dashboard.dart';
 import 'package:appoinment_app/screens/patient_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,8 +13,16 @@ class CreateAccount extends StatelessWidget {
       title: 'Sign Up Screen',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(fontWeight: FontWeight.bold),
+          border: OutlineInputBorder(),
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       home: const SignUpScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -29,27 +35,26 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String? selectedRole; // 'doctor' or 'patient'
+  String? selectedRole;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Add this function for sign up
   Future<void> _signUp() async {
     if (selectedRole == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a role')),
+        const SnackBar(
+            content:
+                Text('Please select a role', style: TextStyle(fontWeight: FontWeight.bold))),
       );
       return;
     }
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      // You can also save additional user info (name, role) to Firestore here if needed
 
-      // Navigate to dashboard
       if (selectedRole == 'doctor') {
         Navigator.pushReplacement(
           context,
@@ -63,7 +68,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Sign up failed')),
+        SnackBar(
+            content: Text(e.message ?? 'Sign up failed',
+                style: const TextStyle(fontWeight: FontWeight.bold))),
       );
     }
   }
@@ -71,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _signUpWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User cancelled
+      if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -81,7 +88,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      // Navigate to dashboard (choose based on selectedRole or default)
       if (selectedRole == 'doctor') {
         Navigator.pushReplacement(
           context,
@@ -95,156 +101,232 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google sign-in failed')),
+        const SnackBar(
+            content: Text('Google sign-in failed',
+                style: TextStyle(fontWeight: FontWeight.bold))),
       );
     }
+  }
+
+  Future<void> _signUpWithApple() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Apple sign-in is not implemented yet.',
+              style: TextStyle(fontWeight: FontWeight.bold))),
+    );
+  }
+
+  Future<void> _signUpWithTwitter() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Twitter sign-in is not implemented yet.',
+              style: TextStyle(fontWeight: FontWeight.bold))),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Create account',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextFormField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedRole = 'doctor';
-                      });
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: selectedRole == 'doctor' 
-                            ? Colors.blue 
-                            : Colors.grey,
-                        width: selectedRole == 'doctor' ? 2 : 1,
+      body: SafeArea(
+        child: DefaultTextStyle(
+          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Back Arrow and Text with no left margin or padding
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 32,
+                          color: Color.fromARGB(255, 10, 10, 10),
+                          shadows: [
+                            Shadow(
+                              offset: Offset(0, 0),
+                              blurRadius: 2,
+                              color: Colors.black54,
+                            )
+                          ],
+                        ),
                       ),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    child: Text(
-                      'Doctor',
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Create Account',
                       style: TextStyle(
-                        color: selectedRole == 'doctor' 
-                            ? Colors.blue 
-                            : Colors.grey,
+                        fontSize: 22,
                       ),
                     ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Name'),
+                      const SizedBox(height: 5),
+                      TextFormField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your name',                          
+                        ),
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Email'),
+                      const SizedBox(height: 5),
+                      TextFormField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your email',                          
+                        ),
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Password'),
+                      const SizedBox(height: 5),
+                      TextFormField(
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your password',
+                        ),
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      const SizedBox(height: 30),
+                      const Text('Select your role'),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedRole = 'doctor';
+                                });
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color:
+                                      selectedRole == 'doctor' ? Colors.blue : Colors.grey,
+                                  width: selectedRole == 'doctor' ? 2 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                'Doctor',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      selectedRole == 'doctor' ? Colors.blue : Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedRole = 'patient';
+                                });
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                  color:
+                                      selectedRole == 'patient' ? Colors.blue : Colors.grey,
+                                  width: selectedRole == 'patient' ? 2 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                'Patient',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      selectedRole == 'patient' ? Colors.blue : Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _signUp,
+                          child: const Text('Sign Up'),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      const Row(
+                        children: [
+                          Expanded(child: Divider()),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text('or'),
+                          ),
+                          Expanded(child: Divider()),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      const Center(
+                        child: Text('Continue with'),
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Image.asset('assets/google.webp',
+                                    height: 40, width: 40),
+                                onPressed: _signUpWithGoogle,
+                              ),
+                              const SizedBox(height: 4),
+                              const Text('Google'),
+                            ],
+                          ),
+                          
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: () {
+                            // Navigate to login screen
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(0, 0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('Have an account? Log in'),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedRole = 'patient';
-                      });
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: selectedRole == 'patient' 
-                            ? Colors.blue 
-                            : Colors.grey,
-                        width: selectedRole == 'patient' ? 2 : 1,
-                      ),
-                    ),
-                    child: Text(
-                      'Patient',
-                      style: TextStyle(
-                        color: selectedRole == 'patient' 
-                            ? Colors.blue 
-                            : Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signUp, // <-- update here
-              child: const Text('Sign Up'),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              children: [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text('or'),
-                ),
-                Expanded(child: Divider()),
-              ],
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Continue with',
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.g_mobiledata, size: 40),
-                  onPressed: _signUpWithGoogle, // <-- update here
-                ),
-                const SizedBox(width: 20),
-                IconButton(
-                  icon: const Icon(Icons.apple, size: 40),
-                  onPressed: () {},
-                ),
-                const SizedBox(width: 20),
-                IconButton(
-                  icon: const Icon(Icons.circle, size: 40),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Have an account? Log in'),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

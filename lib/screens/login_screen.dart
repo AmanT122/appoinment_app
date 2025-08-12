@@ -1,10 +1,6 @@
 import 'package:appoinment_app/screens/create_acc.dart';
 import 'package:appoinment_app/screens/login_main.dart';
-// import 'package:appoinment_sys/screens/create_acc.dart';
-// import 'package:appoinment_sys/screens/login_main.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,35 +12,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Future<void> _loginWithEmail() async {
-  //   try {
-  //     await _auth.signInWithEmailAndPassword(
-  //       email: _emailController.text.trim(),
-  //       password: _passwordController.text.trim(),
-  //     );
-  //     Navigator.pushReplacementNamed(context, '/patient');
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: $e')));
-  //   }
-  // }
-
-  // Future<void> _loginWithGoogle() async {
-  //   try {
-  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  //     if (googleUser == null) return;
-  //     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-  //     final credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-  //     await _auth.signInWithCredential(credential);
-  //     Navigator.pushReplacementNamed(context, '/patient');
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Google sign-in failed: $e')));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo container: lavender background with styled "M"
+              // Logo container: lavender background with logo image
               Container(
                 width: double.infinity,
                 height: 300,
@@ -64,46 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: const Color(0xFFD8D1FF), // soft lavender
                   borderRadius: BorderRadius.circular(32),
                 ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Text(
-                      'M',
-                      style: TextStyle(
-                        fontSize: 180,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF8C7BFF),
-                      ),
-                    ),
-                    Positioned(
-                      right: MediaQuery.of(context).size.width * 0.28,
-                      top: 85,
-                      child: Container(
-                        width: 48,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF8C7BFF),
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.circle,
-                              size: 28,
-                              color: Color(0xFFD8D1FF),
-                            ),
-                            SizedBox(height: 8),
-                            Icon(
-                              Icons.circle,
-                              size: 28,
-                              color: Color(0xFFD8D1FF),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Center(
+                  child: Image.asset(
+                    'assets/logo.png', // Update with your actual logo path if different
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
 
@@ -129,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateAccount()),
+                      MaterialPageRoute(builder: (context) => const CreateAccount()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -139,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Create  Acoount',
+                    'Create Account',
                     style: TextStyle(fontSize: 18, color: Color(0xFF8C7BFF)),
                   ),
                 ),
@@ -154,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginMain()),
+                      MaterialPageRoute(builder: (context) => const LoginMain()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
