@@ -1,10 +1,15 @@
 import 'dart:async';
-import 'package:appoinment_app/screens/doctor_details.dart';
+import 'package:appoinment_app/screens/login_main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/login_screen.dart';
-import 'screens/patient_dashboard.dart';
-import 'screens/doctor_dashboard.dart';
+
+// Screens
+import 'screens/create_acc.dart' hide CreateAccount;           // ✅ Signup Screen
+import 'screens/start_page.dart';           // ✅ Login Screen
+import 'screens/patient_dashboard.dart';    // ✅ Patient Dashboard
+import 'screens/doctor_dashboard.dart';     // ✅ Doctor Dashboard
+import 'screens/doctor_details.dart';       // ✅ Doctor Details Page
+import 'screens/start_page.dart';          // ✅ Login Main Screen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,14 +65,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
-      routes: {
-        '/': (ctx) => const SplashScreen(),
-        '/login': (ctx) => const LoginScreen(),
-        // '/signup': (ctx) => const SignupScreen(),
-        '/patient': (ctx) => PatientDashboard(),
-        '/doctor': (ctx) => const DoctorDashboard(),
-        '/details': (ctx) => DoctorDetails(),
-      },
+       routes: {
+      '/start': (context) => const StartPage(),
+      '/login': (context) => const LoginMain(),
+      '/doctor': (context) => const CreateAccount(),
+      '/patient': (context) => PatientDashboard(),
+    },
     );
   }
 }

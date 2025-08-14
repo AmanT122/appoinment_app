@@ -1,3 +1,7 @@
+import 'package:appoinment_app/screens/AppointmentsScreen.dart';
+import 'package:appoinment_app/screens/MessagesScreen.dart';
+import 'package:appoinment_app/screens/ProfileScreen.dart';
+import 'package:appoinment_app/screens/SearchScreen.dart';
 import 'package:appoinment_app/screens/doctor_details.dart';
 import 'package:appoinment_app/screens/notifications.dart';
 import 'package:appoinment_app/screens/settings.dart';
@@ -17,7 +21,23 @@ class PatientDashboard extends StatelessWidget {
   }
 }
 
-class HealthDashboard extends StatelessWidget {
+class HealthDashboard extends StatefulWidget {
+  @override
+  _HealthDashboardState createState() => _HealthDashboardState();
+}
+
+class _HealthDashboardState extends State<HealthDashboard> {
+
+int _selectedIndex = 0;
+
+final List<Widget> _pages = [
+  // HomePage(),
+  Searchscreen(),
+  Appointmentsscreen(),
+  Messagesscreen(),
+  Profilescreen (),
+];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -331,17 +351,27 @@ class HealthDashboard extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue[700],
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Messages'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
+  type: BottomNavigationBarType.fixed,
+  selectedItemColor: Colors.blue[700],
+  unselectedItemColor: Colors.grey,
+  currentIndex: _selectedIndex,
+  onTap: (int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => _pages[index]),
+    );
+  },
+  items: [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+    BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
+    BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Messages'),
+    BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+  ],
+),
     );
   }
 }
@@ -656,3 +686,4 @@ class _ProfilePopup extends StatelessWidget {
     );
   }
 }
+

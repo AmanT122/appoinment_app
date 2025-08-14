@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class LoginMain extends StatefulWidget {
   const LoginMain({super.key});
@@ -15,21 +17,43 @@ class _LoginMainState extends State<LoginMain> {
   bool _isLoading = false;
 
   Future<void> _login() async {
-    setState(() => _isLoading = true);
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+  setState(() => _isLoading = true);
+
+  try {
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    final User? user = userCredential.user;
+
+    if (user != null) {
+      // Firestore reference
+      DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+      // Check if user document exists
+      final userDoc = await userRef.get();
+      if (!userDoc.exists) {
+        // Save basic user data
+        await userRef.set({
+          'uid': user.uid,
+          'email': user.email,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      // Navigate to patient dashboard
       Navigator.pushReplacementNamed(context, '/patient');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Something went wrong or user not found.')),
-      );
-    } finally {
-      setState(() => _isLoading = false);
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Something went wrong or user not found.')),
+    );
+  } finally {
+    setState(() => _isLoading = false);
   }
+}
+
 
   Widget _buildSocialLoginButton(String imagePath, String label, VoidCallback onPressed) {
     return InkWell(
