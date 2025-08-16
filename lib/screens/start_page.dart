@@ -25,7 +25,7 @@ class StartPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Image.asset(
-                    'assets/logo.png',
+                    'assets/Logo.png',
                     width: 180,
                     height: 180,
                     fit: BoxFit.contain,
@@ -51,10 +51,7 @@ class StartPage extends StatelessWidget {
               _buildRoundedButton(
                 label: 'Create Account',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CreateAccount()),
-                  );
+                  Navigator.pushNamed(context, '/create_account');
                 },
               ),
 
@@ -63,10 +60,7 @@ class StartPage extends StatelessWidget {
               _buildRoundedButton(
                 label: 'Log in',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginMain()),
-                  );
+                  Navigator.pushNamed(context, '/login');
                 },
               ),
 

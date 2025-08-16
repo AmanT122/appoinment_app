@@ -40,9 +40,21 @@ class _LoginMainState extends State<LoginMain> {
           'email': user.email,
           'createdAt': FieldValue.serverTimestamp(),
         });
+      } else {
+        // Get user role from existing document
+        final userData = userDoc.data() as Map<String, dynamic>;
+        final userRole = userData['role'];
+        
+        // Navigate based on user role
+        if (userRole == 'doctor') {
+          Navigator.pushReplacementNamed(context, '/doctor');
+        } else {
+          Navigator.pushReplacementNamed(context, '/patient');
+        }
+        return; // Exit early since we've navigated
       }
 
-      // Navigate to patient dashboard
+      // If no role was found, default to patient dashboard
       Navigator.pushReplacementNamed(context, '/patient');
     }
   } catch (e) {
@@ -195,7 +207,7 @@ class _LoginMainState extends State<LoginMain> {
                           'Continue with',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: Color.fromARGB(255, 15, 7, 7),
                             fontWeight: FontWeight.bold,
                           ),
                         ),

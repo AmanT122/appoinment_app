@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Screens
-import 'screens/create_acc.dart' hide CreateAccount;           // ✅ Signup Screen
+import 'screens/create_acc.dart';           // ✅ Signup Screen
 import 'screens/start_page.dart';           // ✅ Login Screen
 import 'screens/patient_dashboard.dart';    // ✅ Patient Dashboard
 import 'screens/doctor_dashboard.dart';     // ✅ Doctor Dashboard
 import 'screens/doctor_details.dart';       // ✅ Doctor Details Page
-import 'screens/start_page.dart';          // ✅ Login Main Screen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacementNamed('/login');
+      Navigator.of(context).pushReplacementNamed('/start');
     });
   }
 
@@ -66,9 +65,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
        routes: {
+      '/': (context) => const SplashScreen(),
       '/start': (context) => const StartPage(),
       '/login': (context) => const LoginMain(),
-      '/doctor': (context) => const CreateAccount(),
+      '/create_account': (context) => const CreateAccount(),
+      '/doctor': (context) => DoctorDashboard(),
       '/patient': (context) => PatientDashboard(),
     },
     );

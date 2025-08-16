@@ -1,336 +1,291 @@
-import 'package:appoinment_app/screens/doctor_dashboard.dart';
-import 'package:appoinment_app/screens/login_main.dart';
-import 'package:appoinment_app/screens/patient_dashboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart';
+import 'package:appoinment_app/screens/AppointmentsScreen.dart';
+import 'package:appoinment_app/screens/MessagesScreen.dart';
+import 'package:appoinment_app/screens/ProfileScreen.dart';
 
-class CreateAccount extends StatelessWidget {
-  const CreateAccount({super.key});
-
+class DoctorDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sign Up',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-        ),
-      ),
-      home: const SignUpScreen(),
-      routes: {
-        '/login': (context) => const LoginMain(),
-        '/start': (context) => const StartPage(),
-        '/doctor': (context) => const CreateAccount(),
-        '/patient': (context) => PatientDashboard(),
-      },
-    );
+    return DoctorMainDashboard();
   }
 }
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
-
+class DoctorMainDashboard extends StatefulWidget {
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  _DoctorMainDashboardState createState() => _DoctorMainDashboardState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  String? selectedRole;
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class _DoctorMainDashboardState extends State<DoctorMainDashboard> {
+  int _selectedIndex = 0;
 
-  Future<void> _signUp() async {
-    if (selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a role')),
-      );
-      return;
-    }
-
-    try {
-      final userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      final user = userCredential.user;
-      if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'name': nameController.text.trim(),
-          'email': user.email,
-          'role': selectedRole,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account created successfully!')),
-        );
-
-        Future.delayed(const Duration(seconds: 1), () {
-          if (selectedRole == 'doctor') {
-            Navigator.pushReplacementNamed(context, '/doctor');
-          } else {
-            Navigator.pushReplacementNamed(context, '/patient');
-          }
-        });
-      }
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Sign up failed')),
-      );
-    }
-  }
-
-  Future<void> _signUpWithGoogle() async {
-    if (selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a role')),
-      );
-      return;
-    }
-
-    try {
-      final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
-
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      final user = userCredential.user;
-
-      if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'name': user.displayName ?? '',
-          'email': user.email,
-          'role': selectedRole,
-          'createdAt': FieldValue.serverTimestamp(),
-          'provider': 'google',
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account created successfully!')),
-        );
-
-        Future.delayed(const Duration(seconds: 1), () {
-          if (selectedRole == 'doctor') {
-            Navigator.pushReplacementNamed(context, '/doctor');
-          } else {
-            Navigator.pushReplacementNamed(context, '/patient');
-          }
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Google sign-in failed')),
-      );
-    }
-  }
+  final List<Widget> _pages = [
+    DoctorHomePage(),
+    Appointmentsscreen(),
+    Messagesscreen(),
+    Profilescreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Row(
           children: [
-            // Back Arrow and Title
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 28,
-                      color: Colors.black87,
-                    ),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/start');
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Create Account',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ],
+            // Logo
+            Image.asset(
+              'assets/Logo.png',
+              height: 40,
+            ),
+            SizedBox(width: 15),
+            Text(
+              'Dr. Asmit Vishwakarma',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Form Area
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Name'),
-                    const SizedBox(height: 5),
-                    TextFormField(
-                      controller: nameController,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your name'),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text('Email'),
-                    const SizedBox(height: 5),
-                    TextFormField(
-                      controller: emailController,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your email'),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text('Password'),
-                    const SizedBox(height: 5),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your password'),
-                    ),
-                    const SizedBox(height: 30),
-                    const Text('Select your role'),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedRole = 'doctor';
-                              });
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                color: selectedRole == 'doctor'
-                                    ? Colors.blue
-                                    : Colors.grey,
-                                width: 2,
-                              ),
-                            ),
-                            child: Text(
-                              'Doctor',
-                              style: TextStyle(
-                                color: selectedRole == 'doctor'
-                                    ? Colors.blue
-                                    : Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedRole = 'patient';
-                              });
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                color: selectedRole == 'patient'
-                                    ? Colors.blue
-                                    : Colors.grey,
-                                width: 2,
-                              ),
-                            ),
-                            child: Text(
-                              'Patient',
-                              style: TextStyle(
-                                color: selectedRole == 'patient'
-                                    ? Colors.blue
-                                    : Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _signUp,
-                        child: const Text('Sign Up'),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    const Row(
-                      children: [
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text('or'),
-                        ),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    const Center(child: Text('Continue with')),
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: _signUpWithGoogle,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          side: const BorderSide(color: Colors.grey),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/google.webp',
-                              height: 24,
-                              width: 24,
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Continue with Google',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/login');
-                        },
-                        child: const Text('Have an account? Log in'),
-                      ),
-                    ),
-                  ],
-                ),
+            Spacer(),
+            // Profile Avatar
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => _ProfilePopup(),
+                );
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.blue,
+                child: Icon(Icons.person, color: Colors.white),
               ),
             ),
           ],
         ),
+      ),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Appointments',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DoctorHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Welcome Card
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome back, Doctor!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[700],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'You have 5 appointments today',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          
+          // Quick Stats
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatCard(
+                  'Today\'s Appointments',
+                  '5',
+                  Icons.calendar_today,
+                  Colors.blue,
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: _buildStatCard(
+                  'Pending Messages',
+                  '3',
+                  Icons.message,
+                  Colors.orange,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          
+          // Recent Activity
+          Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Recent Activity',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  _buildActivityItem('Patient John Doe booked appointment', '2 hours ago'),
+                  _buildActivityItem('New message from Sarah Wilson', '4 hours ago'),
+                  _buildActivityItem('Appointment with Mike Johnson completed', '1 day ago'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Icon(icon, size: 40, color: color),
+            SizedBox(height: 12),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActivityItem(String text, String time) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(text),
+          ),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfilePopup extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Profile Options'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+              // Navigate to settings
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, '/start');
+            },
+          ),
+        ],
       ),
     );
   }

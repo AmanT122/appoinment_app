@@ -10,14 +10,7 @@ import 'package:flutter/material.dart';
 class PatientDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Roboto',
-      ),
-      home: HealthDashboard(),
-    );
+    return HealthDashboard();
   }
 }
 
@@ -49,7 +42,7 @@ final List<Widget> _pages = [
           children: [
             // Logo
             Image.asset(
-              'assets/logo.png', // Replace with your logo asset
+              'assets/Logo.png', // Replace with your logo asset
               height: 40,
             ),
             SizedBox(width: 15),
@@ -72,7 +65,8 @@ final List<Widget> _pages = [
               },
               child: CircleAvatar(
                 radius: 18,
-                backgroundImage: AssetImage('assets/profile.jpg'), // Replace with your profile image
+                backgroundColor: Colors.blue,
+                child: Icon(Icons.person, color: Colors.white),
               ),
             ),
           ],
@@ -625,18 +619,19 @@ class _ProfilePopup extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundImage: AssetImage('assets/profile.jpg'),
+                      backgroundColor: Colors.blue,
+                      child: Icon(Icons.person, color: Colors.white, size: 28),
                     ),
                     SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ankita Tiwari',
+                          'Aman Tiwari',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         Text(
-                          'ankitatiwari6@gmail.com',
+                          'aman@gmail.com',
                           style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(height: 4),

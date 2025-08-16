@@ -5,28 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart'; // <-- Adjust this import path as needed
+import 'start_page.dart';
 
 class CreateAccount extends StatelessWidget {
   const CreateAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sign Up',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-        ),
-      ),
-      home: const SignUpScreen(),
-      routes: {
-        '/login': (context) => const LoginMain(),
-        '/start': (context) => const StartPage(),
-      },
-    );
+    return const SignUpScreen();
   }
 }
 
@@ -168,32 +154,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Name'),
+                    const Text(
+                      'Name',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: nameController,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your name'),
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your name',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
+
                     const SizedBox(height: 20),
-                    const Text('Email'),
+                    const Text(
+                      'Email',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: emailController,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your email'),
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your email',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
+
                     const SizedBox(height: 20),
-                    const Text('Password'),
+                    const Text(
+                      'Password',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: passwordController,
                       obscureText: true,
-                      decoration:
-                          const InputDecoration(hintText: 'Enter your password'),
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your password',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
+
                     const SizedBox(height: 30),
-                    const Text('Select your role'),
+                    const Text(
+                      'Select your role',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -250,6 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 30),
                     SizedBox(
                       width: double.infinity,
@@ -258,6 +266,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: const Text('Sign Up'),
                       ),
                     ),
+
                     const SizedBox(height: 30),
                     const Row(
                       children: [
@@ -269,8 +278,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Expanded(child: Divider()),
                       ],
                     ),
+
                     const SizedBox(height: 30),
-                    const Center(child: Text('Continue with')),
+                    const Center(
+                      child: Text(
+                        'Continue with',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     const SizedBox(height: 15),
                     SizedBox(
                       width: double.infinity,
@@ -278,7 +293,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onPressed: _signUpWithGoogle,
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
                           side: const BorderSide(color: Colors.grey),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -305,6 +322,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 30),
                     Align(
                       alignment: Alignment.centerLeft,
