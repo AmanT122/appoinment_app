@@ -24,12 +24,13 @@ class _HealthDashboardState extends State<HealthDashboard> {
 int _selectedIndex = 0;
 
 final List<Widget> _pages = [
-  // HomePage(),
-  Searchscreen(),
-  Appointmentsscreen(),
-  Messagesscreen(),
-  Profilescreen (),
+  HealthDashboard(),            // index 0
+  Searchscreen(),        // index 1
+  Appointmentsscreen(),  // index 2
+  MessagesScreen(),      // index 3
+  Profilescreen(),       // index 4
 ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -681,4 +682,3 @@ class _ProfilePopup extends StatelessWidget {
     );
   }
 }
-

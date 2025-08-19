@@ -21,8 +21,8 @@ class _DoctorMainDashboardState extends State<DoctorMainDashboard> {
   final List<Widget> _pages = [
     DoctorHomePage(),
     Appointmentsscreen(),
-    Messagesscreen(),
-    Profilescreen(),
+    // Messagesscreen(),
+    // Profilescreen(),
   ];
 
   @override
