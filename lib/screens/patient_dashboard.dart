@@ -20,16 +20,15 @@ class HealthDashboard extends StatefulWidget {
 }
 
 class _HealthDashboardState extends State<HealthDashboard> {
+  int _selectedIndex = 0;
 
-int _selectedIndex = 0;
-
-final List<Widget> _pages = [
-  // HomePage(),
-  Searchscreen(),
-  Appointmentsscreen(),
-  Messagesscreen(),
-  Profilescreen (),
-];
+  // Corrected the pages list - removed HealthDashboard from itself
+  final List<Widget> _pages = [
+    Searchscreen(), // Index 0
+    Appointmentsscreen(), // Index 1
+    Messagesscreen(), // Index 2
+    Profilescreen(), // Index 3
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,70 +89,93 @@ final List<Widget> _pages = [
                     Icon(Icons.location_on, size: 20, color: Colors.blue[700]),
                     SizedBox(width: 8),
                     Expanded(
-                      child: Text('8RWV+7XH, near Bassein Catholic Bank, Virar West',
-                          style: TextStyle(fontSize: 14)),
+                      child: Text(
+                        '8RWV+7XH, near Bassein Catholic Bank, Virar West',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                     Icon(Icons.chevron_right, color: Colors.grey),
                   ],
                 ),
               ),
             ),
-            
+
             SizedBox(height: 24),
-            
+
             // Symptoms Section
             SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: Row(
-    children: [
-      // Search Icon Button
-      Container(
-        margin: EdgeInsets.only(right: 8),
-        child: IconButton(
-          icon: Icon(Icons.search, size: 28),
-          tooltip: 'Search Doctor',
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => _DoctorSearchDialog(),
-            );
-          },
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.15),
-              blurRadius: 4,
-              offset: Offset(0, 2),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  // Search Icon Button
+                  Container(
+                    margin: EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      icon: Icon(Icons.search, size: 28),
+                      tooltip: 'Search Doctor',
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => _DoctorSearchDialog(),
+                        );
+                      },
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.15),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _SymptomChip(
+                    label: 'Chest Pain',
+                    icon: Icons.favorite_border,
+                    active: true,
+                  ),
+                  SizedBox(width: 8),
+                  _SymptomChip(
+                    label: 'Headache',
+                    icon: Icons.psychology_outlined,
+                  ),
+                  SizedBox(width: 8),
+                  _SymptomChip(
+                    label: 'Knee Pain',
+                    icon: Icons.directions_run_outlined,
+                  ),
+                  SizedBox(width: 8),
+                  _SymptomChip(label: 'Add +', icon: Icons.add),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-      _SymptomChip(label: 'Chest Pain', icon: Icons.favorite_border, active: true),
-      SizedBox(width: 8),
-      _SymptomChip(label: 'Headache', icon: Icons.psychology_outlined),
-      SizedBox(width: 8),
-      _SymptomChip(label: 'Knee Pain', icon: Icons.directions_run_outlined),
-      SizedBox(width: 8),
-      _SymptomChip(label: 'Add +', icon: Icons.add),
-    ],
-  ),
-),
-            
+
             SizedBox(height: 24),
-            
+
             // Upcoming Appointment
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Upcoming Appointment', style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  'Upcoming Appointment',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
                 TextButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, '/appointments');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Appointmentsscreen(),
+                      ),
+                    );
                   },
-                  child: Text('View All', style: TextStyle(color: Colors.blue[700])),
+                  child: Text(
+                    'View All',
+                    style: TextStyle(color: Colors.blue[700]),
+                  ),
                 ),
               ],
             ),
@@ -179,18 +201,39 @@ final List<Widget> _pages = [
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Dr. Abhineet Pardesi', 
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text('Orthopaedic Specialist', 
-                            style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                        Text(
+                          'Dr. Abhineet Pardesi',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Orthopaedic Specialist',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
                         SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.calendar_today, size: 16, color: Colors.blue[700]),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 16,
+                              color: Colors.blue[700],
+                            ),
                             SizedBox(width: 4),
-                            Text('Monday, 22 July', style: TextStyle(fontSize: 12)),
+                            Text(
+                              'Monday, 22 July',
+                              style: TextStyle(fontSize: 12),
+                            ),
                             SizedBox(width: 16),
-                            Icon(Icons.access_time, size: 16, color: Colors.blue[700]),
+                            Icon(
+                              Icons.access_time,
+                              size: 16,
+                              color: Colors.blue[700],
+                            ),
                             SizedBox(width: 4),
                             Text('10:00 AM', style: TextStyle(fontSize: 12)),
                           ],
@@ -202,55 +245,119 @@ final List<Widget> _pages = [
                 ],
               ),
             ),
-            
+
             SizedBox(height: 24),
-            
-            // Specialists Section
-            Text('Specialists', style: Theme.of(context).textTheme.headlineSmall),
+
+            // Specialists Section - Made all cards clickable
+            Text(
+              'Specialists',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
             SizedBox(height: 12),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _SpecialistCard(
-                    icon: Icons.healing, 
-                    title: 'Orthopaedic',
-                    color: Colors.orange[100]!,
-                    iconColor: Colors.orange[800]!,
+                  // Orthopaedic Specialist
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Searchscreen(),
+                        ),
+                      );
+                    },
+                    child: _SpecialistCard(
+                      icon: Icons.healing,
+                      title: 'Orthopaedic',
+                      color: Colors.orange[100]!,
+                      iconColor: Colors.orange[800]!,
+                    ),
                   ),
-                  _SpecialistCard(
-                    icon: Icons.favorite, 
-                    title: 'Cardiologist',
-                    color: Colors.red[100]!,
-                    iconColor: Colors.red[800]!,
+
+                  // Cardiologist Specialist
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Searchscreen(),
+                        ),
+                      );
+                    },
+                    child: _SpecialistCard(
+                      icon: Icons.favorite,
+                      title: 'Cardiologist',
+                      color: Colors.red[100]!,
+                      iconColor: Colors.red[800]!,
+                    ),
                   ),
-                  _SpecialistCard(
-                    icon: Icons.child_care, 
-                    title: 'Pediatrician',
-                    color: Colors.blue[100]!,
-                    iconColor: Colors.blue[800]!,
+
+                  // Pediatrician Specialist
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Searchscreen(),
+                        ),
+                      );
+                    },
+                    child: _SpecialistCard(
+                      icon: Icons.child_care,
+                      title: 'Pediatrician',
+                      color: Colors.blue[100]!,
+                      iconColor: Colors.blue[800]!,
+                    ),
                   ),
-                  _SpecialistCard(
-                    icon: Icons.psychology, 
-                    title: 'Psychiatrist',
-                    color: Colors.purple[100]!,
-                    iconColor: Colors.purple[800]!,
+
+                  // Psychiatrist Specialist
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Searchscreen(),
+                        ),
+                      );
+                    },
+                    child: _SpecialistCard(
+                      icon: Icons.psychology,
+                      title: 'Psychiatrist',
+                      color: Colors.purple[100]!,
+                      iconColor: Colors.purple[800]!,
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
             SizedBox(height: 24),
-            
+
             // Doctors Nearby Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Doctors Near You', style: Theme.of(context).textTheme.headlineSmall),
+                Text( 
+                  'Doctors Near You',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
                 TextButton(
                   onPressed: () {
-             },
-                  child: Text('View All', style: TextStyle(color: Colors.blue[700])),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Searchscreen()),
+                    );
+                  },
+                  child: Text(
+                    'View All',
+                    style: TextStyle(color: Colors.blue[700]),
+                  ),
                 ),
               ],
             ),
@@ -263,109 +370,126 @@ final List<Widget> _pages = [
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
               children: [
-              GestureDetector(
-      onTap: () {
-        // Navigate to the doctor details screen when tapped
-         Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => DoctorDetails(
-        
-      ),
-    ),
-  );
-      },
-      child: _DoctorCard(
-        doctorName: 'Dr. Avani', 
-        specialization: 'Orthopaedic', 
-        distance: '2.2 km',
-        image: 'assets/dr.1.jpg',
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        // Navigate to the doctor details screen when tapped
-         Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => DoctorDetails(
-        
-      ),
-    ),
-  );
-      },
-      child: _DoctorCard(
-        doctorName: 'Dr. Murarskar', 
-        specialization: 'Naturopathy', 
-        distance: '1.5 km',
-        image: 'assets/dr.2.webp',
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        // Navigate to the doctor details screen when tapped
-         Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => DoctorDetails(
-        
-      ),
-    ),
-  );
-      },
-      child: _DoctorCard(
-        doctorName: 'Dr. Kamal', 
-        specialization: 'Dentist', 
-        distance: '3.1 km',
-        image: 'assets/dr.3.jpeg',
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        // Navigate to the doctor details screen when tapped
-          Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => DoctorDetails(
-        
-      ),
-    ),
-  );
-      },
-      child: _DoctorCard(
-        doctorName: 'Dr. Sharma', 
-        specialization: 'General Physician', 
-        distance: '0.8 km',
-        image: 'assets/dr.4.webp',
-      ),
-    ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetails(
+                          doctorName: 'Dr. Avani',
+                          specialization: 'Orthopaedic',
+                          image: 'assets/dr.1.jpg',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _DoctorCard(
+                    doctorName: 'Dr. Avani',
+                    specialization: 'Orthopaedic',
+                    distance: '2.2 km',
+                    image: 'assets/dr.1.jpg',
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetails(
+                          doctorName: 'Dr. Murarskar',
+                          specialization: 'Naturopathy',
+                          image: 'assets/dr.2.webp',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _DoctorCard(
+                    doctorName: 'Dr. Murarskar',
+                    specialization: 'Naturopathy',
+                    distance: '1.5 km',
+                    image: 'assets/dr.2.webp',
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetails(
+                          doctorName: 'Dr. Kamal',
+                          specialization: 'Dentist',
+                          image: 'assets/dr.3.jpeg',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _DoctorCard(
+                    doctorName: 'Dr. Kamal',
+                    specialization: 'Dentist',
+                    distance: '3.1 km',
+                    image: 'assets/dr.3.jpeg',
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorDetails(
+                          doctorName: 'Dr. Sharma',
+                          specialization: 'General Physician',
+                          image: 'assets/dr.4.webp',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _DoctorCard(
+                    doctorName: 'Dr. Sharma',
+                    specialization: 'General Physician',
+                    distance: '0.8 km',
+                    image: 'assets/dr.4.webp',
+                  ),
+                ),
               ],
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-  type: BottomNavigationBarType.fixed,
-  selectedItemColor: Colors.blue[700],
-  unselectedItemColor: Colors.grey,
-  currentIndex: _selectedIndex,
-  onTap: (int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => _pages[index]),
-    );
-  },
-  items: [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-    BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-    BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Messages'),
-    BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-  ],
-),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue[700],
+        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+
+          // For index 0 (Home), we don't navigate, we're already there
+          if (index > 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => _pages[index - 1]),
+            );
+          }
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Appointments',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble_outline),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -380,8 +504,15 @@ class _SymptomChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      avatar: Icon(icon, size: 20, color: active ? Colors.white : Colors.grey[600]),
-      label: Text(label, style: TextStyle(color: active ? Colors.white : Colors.black)),
+      avatar: Icon(
+        icon,
+        size: 20,
+        color: active ? Colors.white : Colors.grey[600],
+      ),
+      label: Text(
+        label,
+        style: TextStyle(color: active ? Colors.white : Colors.black),
+      ),
       backgroundColor: active ? Colors.blue[700] : Colors.grey[300],
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -524,7 +655,13 @@ class _DoctorSearchDialog extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DoctorDetails()),
+                        MaterialPageRoute(
+                          builder: (context) => DoctorDetails(
+                            doctorName: 'Dr. Avani',
+                            specialization: 'Orthopaedic',
+                            image: 'assets/dr.1.jpg',
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -536,7 +673,13 @@ class _DoctorSearchDialog extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DoctorDetails()),
+                        MaterialPageRoute(
+                          builder: (context) => DoctorDetails(
+                            doctorName: 'Dr. Murarskar',
+                            specialization: 'Naturopathy',
+                            image: 'assets/dr.2.webp',
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -628,12 +771,12 @@ class _ProfilePopup extends StatelessWidget {
                       children: [
                         Text(
                           'Aman Tiwari',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                        Text(
-                          'aman@gmail.com',
-                          style: TextStyle(fontSize: 14),
-                        ),
+                        Text('aman@gmail.com', style: TextStyle(fontSize: 14)),
                         SizedBox(height: 4),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
@@ -644,7 +787,10 @@ class _ProfilePopup extends StatelessWidget {
                           ),
                           onPressed: () {},
                           icon: Icon(Icons.edit, size: 16, color: Colors.white),
-                          label: Text('Edit', style: TextStyle(fontSize: 12, color: Colors.white)),
+                          label: Text(
+                            'Edit',
+                            style: TextStyle(fontSize: 12, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -671,7 +817,10 @@ class _ProfilePopup extends StatelessWidget {
                 },
                 child: Text(
                   'LOG OUT',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -681,4 +830,3 @@ class _ProfilePopup extends StatelessWidget {
     );
   }
 }
-

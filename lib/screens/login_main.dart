@@ -152,7 +152,7 @@ class _LoginMainState extends State<LoginMain> {
                           hintText: 'Enter your email',
                           hintStyle: TextStyle(
                             fontWeight: FontWeight.normal,
-                            color: Colors.grey,
+                            color: Color.fromARGB(255, 169, 154, 154),
                           ),
                         ),
                       ),
@@ -184,7 +184,7 @@ class _LoginMainState extends State<LoginMain> {
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white,
+                                    color: Color.fromARGB(255, 52, 33, 33),
                                   ),
                                 )
                               : const Text('Login'),
