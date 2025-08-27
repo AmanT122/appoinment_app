@@ -1,11 +1,12 @@
-import 'package:appoinment_app/screens/AppointmentsScreen.dart';
-import 'package:appoinment_app/screens/MessagesScreen.dart';
-import 'package:appoinment_app/screens/ProfileScreen.dart';
-import 'package:appoinment_app/screens/SearchScreen.dart';
+import 'package:appoinment_app/screens/pages_patient/AppointmentsScreen.dart';
+import 'package:appoinment_app/screens/pages_patient/MessagesScreen.dart';
+import 'package:appoinment_app/screens/pages_patient/ProfileScreen.dart';
+import 'package:appoinment_app/screens/pages_patient/SearchScreen.dart';
 import 'package:appoinment_app/screens/doctor_details.dart';
-import 'package:appoinment_app/screens/notifications.dart';
-import 'package:appoinment_app/screens/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class PatientDashboard extends StatelessWidget {
   @override
@@ -17,18 +18,31 @@ class PatientDashboard extends StatelessWidget {
 class HealthDashboard extends StatefulWidget {
   @override
   _HealthDashboardState createState() => _HealthDashboardState();
+  
 }
 
 class _HealthDashboardState extends State<HealthDashboard> {
   int _selectedIndex = 0;
 
-  // Corrected the pages list - removed HealthDashboard from itself
+  // Pages
   final List<Widget> _pages = [
-    Searchscreen(), // Index 0
-    Appointmentsscreen(), // Index 1
-    Messagesscreen(), // Index 2
-    Profilescreen(), // Index 3
+    Searchscreen(),
+    Appointmentsscreen(),
+    Messagesscreen(),
+    Profilescreen(),
   ];
+
+  // 🔹 Fetch name from SharedPreferences
+ Future<String> fetchUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        return doc['name'] ?? "Guest";
+      }
+    }
+    return "Guest";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,22 +53,28 @@ class _HealthDashboardState extends State<HealthDashboard> {
         elevation: 1,
         title: Row(
           children: [
-            // Logo
-            Image.asset(
-              'assets/Logo.png', // Replace with your logo asset
-              height: 40,
-            ),
+            Image.asset('assets/Logo.png', height: 40),
             SizedBox(width: 15),
-            Text(
-              'Asmit Vishwakarma',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              ),
+            FutureBuilder<String>(
+              future: fetchUserName(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('Loading...', style: TextStyle(color: Colors.grey));
+                } else if (snapshot.hasError) {
+                  return Text('Error', style: TextStyle(color: Colors.red));
+                } else {
+                  return Text(
+                    snapshot.data ?? 'Guest',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  );
+                }
+              },
             ),
             Spacer(),
-            // Profile Avatar
             GestureDetector(
               onTap: () {
                 showDialog(
@@ -71,7 +91,7 @@ class _HealthDashboardState extends State<HealthDashboard> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,16 +130,6 @@ class _HealthDashboardState extends State<HealthDashboard> {
                   // Search Icon Button
                   Container(
                     margin: EdgeInsets.only(right: 8),
-                    child: IconButton(
-                      icon: Icon(Icons.search, size: 28),
-                      tooltip: 'Search Doctor',
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => _DoctorSearchDialog(),
-                        );
-                      },
-                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -130,6 +140,16 @@ class _HealthDashboardState extends State<HealthDashboard> {
                           offset: Offset(0, 2),
                         ),
                       ],
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.search, size: 28),
+                      tooltip: 'Search Doctor',
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => _DoctorSearchDialog(),
+                        );
+                      },
                     ),
                   ),
                   _SymptomChip(

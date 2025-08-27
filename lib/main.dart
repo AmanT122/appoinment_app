@@ -1,18 +1,25 @@
 import 'dart:async';
+import 'package:appoinment_app/doctor_form.dart';
+import 'package:appoinment_app/patient_form.dart';
 import 'package:appoinment_app/screens/login_main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 // Screens
 import 'screens/create_acc.dart';           // ✅ Signup Screen
 import 'screens/start_page.dart';           // ✅ Login Screen
 import 'screens/patient_dashboard.dart';    // ✅ Patient Dashboard
 import 'screens/doctor_dashboard.dart';     // ✅ Doctor Dashboard
-import 'screens/doctor_details.dart';       // ✅ Doctor Details Page
+      // ✅ Doctor Details Page
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.debug,
+  );
   runApp(const MyApp());
 }
 
@@ -71,6 +78,10 @@ class MyApp extends StatelessWidget {
       '/create_account': (context) => const CreateAccount(),
       '/doctor': (context) => DoctorDashboard(),
       '/patient': (context) => PatientDashboard(),
+       '/patient_form': (context) => PatientFormScreen(),
+    '/doctor_form': (context) => DoctorFormScreen(),
+    '/patient_dashboard': (context) => PatientDashboard(),
+    '/doctor_dashboard' : (context) => DoctorDashboard(),
     },
     );
   }

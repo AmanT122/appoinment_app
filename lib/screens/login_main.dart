@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class LoginMain extends StatefulWidget {
   const LoginMain({super.key});
 
@@ -17,55 +16,50 @@ class _LoginMainState extends State<LoginMain> {
   bool _isLoading = false;
 
   Future<void> _login() async {
-  setState(() => _isLoading = true);
+    setState(() => _isLoading = true);
 
-  try {
-    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    final User? user = userCredential.user;
+      final User? user = userCredential.user;
 
-    if (user != null) {
-      // Firestore reference
-      DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      if (user != null) {
+        DocumentReference userRef =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
 
-      // Check if user document exists
-      final userDoc = await userRef.get();
-      if (!userDoc.exists) {
-        // Save basic user data
-        await userRef.set({
-          'uid': user.uid,
-          'email': user.email,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      } else {
-        // Get user role from existing document
-        final userData = userDoc.data() as Map<String, dynamic>;
-        final userRole = userData['role'];
-        
-        // Navigate based on user role
-        if (userRole == 'doctor') {
-          Navigator.pushReplacementNamed(context, '/doctor');
+        final userDoc = await userRef.get();
+        if (!userDoc.exists) {
+          await userRef.set({
+            'uid': user.uid,
+            'email': user.email,
+            'role': 'patient', // Default role
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+          // Navigate to patient form since it's a new user
+          Navigator.pushReplacementNamed(context, '/patient_form');
         } else {
-          Navigator.pushReplacementNamed(context, '/patient');
+          final userData = userDoc.data() as Map<String, dynamic>;
+          final userRole = userData['role'] ?? 'patient';
+          
+          // Navigate based on user role
+          if (userRole == 'doctor') {
+            Navigator.pushReplacementNamed(context, '/doctor_form');
+          } else {
+            Navigator.pushReplacementNamed(context, '/patient_form');
+          }
         }
-        return; // Exit early since we've navigated
       }
-
-      // If no role was found, default to patient dashboard
-      Navigator.pushReplacementNamed(context, '/patient');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: ${e.toString()}')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Something went wrong or user not found.')),
-    );
-  } finally {
-    setState(() => _isLoading = false);
   }
-}
-
 
   Widget _buildSocialLoginButton(String imagePath, String label, VoidCallback onPressed) {
     return InkWell(
@@ -117,9 +111,7 @@ class _LoginMainState extends State<LoginMain> {
                     size: 28,
                     color: Colors.black,
                   ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(width: 4),
                 const Text(
@@ -184,7 +176,7 @@ class _LoginMainState extends State<LoginMain> {
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Color.fromARGB(255, 52, 33, 33),
+                                    color: Colors.white,
                                   ),
                                 )
                               : const Text('Login'),

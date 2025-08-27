@@ -1,5 +1,4 @@
-import 'package:appoinment_app/screens/create_acc.dart';
-import 'package:appoinment_app/screens/login_main.dart';
+
 import 'package:flutter/material.dart';
 
 class StartPage extends StatelessWidget {

@@ -1,11 +1,8 @@
-import 'package:appoinment_app/screens/doctor_dashboard.dart';
-import 'package:appoinment_app/screens/login_main.dart';
-import 'package:appoinment_app/screens/patient_dashboard.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart';
 
 class CreateAccount extends StatelessWidget {
   const CreateAccount({super.key});
